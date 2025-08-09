@@ -1,22 +1,11 @@
 from manim import *
 import random
+import get_colors as colors
 
-CYBERDREAM = (
-    # RGBA.from_hex("#16181a"),
-    # RGBA.from_hex("#1e2124"),
-    # RGBA.from_hex("#3c4048"),
-    # RGBA.from_hex("#ffffff"),
-    # RGBA.from_hex("#7b8496"),
-    RGBA.from_hex("#5ea1ff"),
-    RGBA.from_hex("#5eff6c"),
-    RGBA.from_hex("#5ef1ff"),
-    RGBA.from_hex("#ff6e5e"),
-    RGBA.from_hex("#f1ff5e"),
-    RGBA.from_hex("#ff5ef1"),
-    RGBA.from_hex("#ff5ea0"),
-    RGBA.from_hex("#ffbd5e"),
-    RGBA.from_hex("#bd5eff"),
-)
+
+config.background_color = colors.BACKGROUND
+
+
 class MyWalk(Scene):
     def construct(self):
         width = int(self.camera.frame_width + 0.5)
@@ -27,11 +16,11 @@ class MyWalk(Scene):
             self.add(Line(
                 (x1 - width / 2 + 0.5, y1 - height / 2 + 0.5, 0),
                 (x2 - width / 2 + 0.5, y2 - height / 2 + 0.5, 0),
-                color=random.choice(CYBERDREAM)
+                color=random.choice(colors.PALETTE)
             ))
         for x in range(width):
             for y in range(height):
-                self.add(Dot(color=WHITE, radius=0.075).move_to(np.array([x - width / 2 + 0.5, y - height / 2 + 0.5, 0])))
+                self.add(Dot(color=colors.FOREGROUND, radius=0.075).move_to(np.array([x - width / 2 + 0.5, y - height / 2 + 0.5, 0])))
 
 def get_walls(width, height):
     def rec(x, y):
