@@ -70,6 +70,6 @@ The fields are as follows:
 ```
 
 ## 🤝 Acknowledgements
-- [scottmckendry/cyberdream.nvim](https://github.com/scottmckendry/cyberdream.nvim): Colorscheme used in the example wallpapers and config.
+- [scottmckendry/cyberdream.nvim](https://github.com/scottmckendry/cyberdream.nvim): Colorscheme used in the example wallpapers and config
 - [ManimCommunity/manim](https://github.com/ManimCommunity/manim): Python library used for generating wallpapers
 
