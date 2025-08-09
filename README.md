@@ -17,6 +17,11 @@
             <img src="output/tree.png"
         </td>
     </tr>
+    <tr>
+        <td>
+            <img src="output/filled_delaunay.png"
+        </td>
+    </tr>
 </table>
 
 ## 🚀 Usage
