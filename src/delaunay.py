@@ -20,9 +20,7 @@ CYBERDREAM = (
 )
 class MyDelaunay(Scene):
     def construct(self):
-        np.random.seed(42)
-        random.seed(42)
-        dot_count = 100
+        dot_count = int(self.camera.frame_width * self.camera.frame_height)
 
         dots = self.get_n_random_dots(dot_count)
 

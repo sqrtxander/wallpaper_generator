@@ -19,8 +19,9 @@ CYBERDREAM = (
 )
 class MyWalk(Scene):
     def construct(self):
-        random.seed(42)
-        width, height = 12, 8
+        width = int(self.camera.frame_width + 0.5)
+        height = int(self.camera.frame_height + 0.5)
+
         walls = get_walls(width, height)
         for (x1, y1), (x2, y2) in walls:
             self.add(Line(
