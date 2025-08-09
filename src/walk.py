@@ -1,12 +1,14 @@
 from manim import *
 import random
-import get_colors as colors
+import util.get_options as opts
 
 
-config.background_color = colors.BACKGROUND
+config.background_color = opts.BACKGROUND
+config.pixel_width = opts.WIDTH
+config.pixel_height = opts.HEIGHT
 
 
-class MyWalk(Scene):
+class Walk(Scene):
     def construct(self):
         width = int(self.camera.frame_width + 0.5)
         height = int(self.camera.frame_height + 0.5)
@@ -16,11 +18,11 @@ class MyWalk(Scene):
             self.add(Line(
                 (x1 - width / 2 + 0.5, y1 - height / 2 + 0.5, 0),
                 (x2 - width / 2 + 0.5, y2 - height / 2 + 0.5, 0),
-                color=random.choice(colors.PALETTE)
+                color=random.choice(opts.PALETTE)
             ))
         for x in range(width):
             for y in range(height):
-                self.add(Dot(color=colors.FOREGROUND, radius=0.075).move_to(np.array([x - width / 2 + 0.5, y - height / 2 + 0.5, 0])))
+                self.add(Dot(color=opts.FOREGROUND, radius=0.075).move_to(np.array([x - width / 2 + 0.5, y - height / 2 + 0.5, 0])))
 
 def get_walls(width, height):
     def rec(x, y):

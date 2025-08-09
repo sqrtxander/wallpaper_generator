@@ -1,12 +1,14 @@
 from manim import *
 import random
-import get_colors as colors
+import util.get_options as opts
 
 
-config.background_color = colors.BACKGROUND
+config.background_color = opts.BACKGROUND
+config.pixel_width = opts.WIDTH
+config.pixel_height = opts.HEIGHT
 
 
-class MyTree(Scene):
+class Tree(Scene):
     def construct(self):
         self.left_angle = random.randint(10, 60) * DEGREES
         self.right_angle = random.randint(10, 60) * DEGREES
@@ -24,7 +26,7 @@ class MyTree(Scene):
             0,
         ])
 
-        self.add(Line(point, p, color=random.choice(colors.PALETTE)))
+        self.add(Line(point, p, color=random.choice(opts.PALETTE)))
 
         self.tree_path(p, angle + self.left_angle, r * 0.75)
         self.tree_path(p, angle - self.right_angle, r * 0.75)

@@ -1,12 +1,14 @@
 from manim import *
 import random
-import get_colors as colors
+import util.get_options as opts
 
 
-config.background_color = colors.BACKGROUND
+config.background_color = opts.BACKGROUND
+config.pixel_width = opts.WIDTH
+config.pixel_height = opts.HEIGHT
 
 
-class MySierpinski(Scene):
+class Sierpinski(Scene):
     def construct(self):
         s = min(
             self.camera.frame_height * 2 / np.sqrt(3),
@@ -19,9 +21,9 @@ class MySierpinski(Scene):
             ORIGIN + s * np.sqrt(3) / 4 * UP,
         ]
 
-        self.add(Line(points[0], points[1], color=random.choice(colors.PALETTE)))
-        self.add(Line(points[1], points[2], color=random.choice(colors.PALETTE)))
-        self.add(Line(points[2], points[0], color=random.choice(colors.PALETTE)))
+        self.add(Line(points[0], points[1], color=random.choice(opts.PALETTE)))
+        self.add(Line(points[1], points[2], color=random.choice(opts.PALETTE)))
+        self.add(Line(points[2], points[0], color=random.choice(opts.PALETTE)))
 
         self.sierpinsify(points)
 
@@ -36,9 +38,9 @@ class MySierpinski(Scene):
             midpoint(points[2], points[0]),
         ]
 
-        self.add(Line(midpoints[0], midpoints[1], color=random.choice(colors.PALETTE)))
-        self.add(Line(midpoints[1], midpoints[2], color=random.choice(colors.PALETTE)))
-        self.add(Line(midpoints[2], midpoints[0], color=random.choice(colors.PALETTE)))
+        self.add(Line(midpoints[0], midpoints[1], color=random.choice(opts.PALETTE)))
+        self.add(Line(midpoints[1], midpoints[2], color=random.choice(opts.PALETTE)))
+        self.add(Line(midpoints[2], midpoints[0], color=random.choice(opts.PALETTE)))
 
         self.sierpinsify([points[0], midpoints[0], midpoints[2]])
         self.sierpinsify([midpoints[0], points[1],  midpoints[1]])

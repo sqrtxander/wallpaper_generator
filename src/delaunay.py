@@ -1,13 +1,15 @@
 from manim import *
-from scipy.spatial import Delaunay
+from scipy.spatial import Delaunay as DelaunayHelper
 import random
-import get_colors as colors
+import util.get_options as opts
 
 
-config.background_color = colors.BACKGROUND
+config.background_color = opts.BACKGROUND
+config.pixel_width = opts.WIDTH
+config.pixel_height = opts.HEIGHT
 
 
-class MyDelaunay(Scene):
+class Delaunay(Scene):
     def construct(self):
         dot_count = int(self.camera.frame_width * self.camera.frame_height)
 
@@ -15,13 +17,13 @@ class MyDelaunay(Scene):
 
         dot_coords = [dot.get_center().tolist()[:-1] for dot in dots]
         delaunay = create_delaunay(dot_coords)
-        lines = VGroup(Line((x1, y1, 0), (x2, y2, 0), color=random.choice(colors.PALETTE))
+        lines = VGroup(Line((x1, y1, 0), (x2, y2, 0), color=random.choice(opts.PALETTE))
                             for (x1, y1), (x2, y2) in delaunay)
         self.add(lines)
         self.add(dots)
 
     def get_n_random_dots(self, n):
-        return VGroup(Dot(color=colors.FOREGROUND, radius=0.075).move_to(np.around((
+        return VGroup(Dot(color=opts.FOREGROUND, radius=0.075).move_to(np.around((
             (np.random.rand() - 0.5) * self.camera.frame_width,
             (np.random.rand() - 0.5) * self.camera.frame_height,
             0), 2)) for _ in range(n))
@@ -29,7 +31,7 @@ class MyDelaunay(Scene):
 
 def create_delaunay(points):
     points = np.array(points)
-    tri = Delaunay(points)
+    tri = DelaunayHelper(points)
     edges = set()
 
     for simplex in tri.simplices:
