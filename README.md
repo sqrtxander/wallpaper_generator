@@ -39,6 +39,7 @@ Modify [options.json](options.json) to fit your needs.
 The fields are as follows:
 - `dimensions.width`: the width of your wallpapers in pixels
 - `dimensions.height`: the height of your wallpapers in pixels
+- `dimensions.scale`: the scale factor for your wallpapers, affecting things such as line thickness and dot size
 - `colors.background`: hex colour code string for the background of the image
 - `colors.foreground`: hex colour code string for the foreground elements such as dots
 - `colors.palette`: array of hex color code strings for the other elements
@@ -47,7 +48,8 @@ The fields are as follows:
 {
     "dimensions": {
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "scale": 1
     },
     "colors": {
         "background": "#16181a",
