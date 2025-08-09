@@ -7,6 +7,7 @@ import util.get_options as opts
 config.background_color = opts.BACKGROUND
 config.pixel_width = opts.WIDTH
 config.pixel_height = opts.HEIGHT
+config.frame_width /= opts.SCALE
 
 
 class Delaunay(Scene):
