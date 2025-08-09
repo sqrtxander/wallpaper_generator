@@ -20,7 +20,7 @@
 </table>
 
 ## 🚀 Usage
-1. Create a virtual environment with your preferred method and activate it
+1. Create a virtual environment with your preferred method, and activate it
 1. Install the requirements with `pip install -r requirements.txt`
 1. Generate an image with
     ```bash
@@ -40,8 +40,8 @@ The fields are as follows:
 - `dimensions.width`: the width of your wallpapers in pixels
 - `dimensions.height`: the height of your wallpapers in pixels
 - `dimensions.scale`: the scale factor for your wallpapers, affecting things such as line thickness and dot size
-- `colors.background`: hex colour code string for the background of the image
-- `colors.foreground`: hex colour code string for the foreground elements such as dots
+- `colors.background`: hex color code string for the background of the image
+- `colors.foreground`: hex color code string for the foreground elements such as dots
 - `colors.palette`: array of hex color code strings for the other elements
 
 ```json
