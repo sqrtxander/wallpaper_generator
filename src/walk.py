@@ -1,59 +1,105 @@
-from manim import *
+from typing import override
+import os
+from PIL import Image, ImageDraw
 import random
-import util.get_options as opts
+from util.wallpaper_generator import WallpaperGenerator
+import util.get_opts as opts
+import argparse
 
 
-config.background_color = opts.BACKGROUND
-config.pixel_width = opts.WIDTH
-config.pixel_height = opts.HEIGHT
-config.frame_width /= opts.SCALE
+class Walk(WallpaperGenerator):
+    LINE_WIDTH: int = 8
+    CIRCLE_RADIUS: int = 12
+
+    def __init__(self, base: str):
+        super().__init__()
+        self.out_base: str = base or "walk"
+
+    @override
+    def generate(self):
+        img = Image.new(
+            "RGB",
+            (opts.WIDTH, opts.HEIGHT),
+            opts.BACKGROUND,
+        )
+        draw = ImageDraw.Draw(img)
+        scale = 150 * opts.SCALE
+        # can't use integer division because scale can be a float
+        rows = int(opts.HEIGHT / scale)
+        cols = int(opts.WIDTH / scale)
+        walls: set[tuple[tuple[int, int], tuple[int, int]]] = get_walls(cols, rows)
+
+        def point_to_coord(p: tuple[int, int]) -> tuple[int, int]:
+            x, y = p
+            mx, my = opts.WIDTH // 2, opts.HEIGHT // 2
+            return (
+                int(mx - (x - cols / 2 + 0.5) * scale),
+                int(my - (y - rows / 2 + 0.5) * scale),
+            )
+
+        for p1, p2 in walls:
+            draw.line(
+                (point_to_coord(p1), point_to_coord(p2)),
+                width=int(self.LINE_WIDTH * opts.SCALE),
+                fill=random.choice(opts.PALETTE),
+            )
+
+        for x in range(cols):
+            for y in range(rows):
+                draw.circle(
+                    point_to_coord((x, y)),
+                    radius=int(self.CIRCLE_RADIUS * opts.SCALE),
+                    fill=opts.FOREGROUND,
+                )
+
+        img.save(os.path.join(self.out_dir, self.out_base))
 
 
-class Walk(Scene):
-    def construct(self):
-        width = int(self.camera.frame_width + 0.5)
-        height = int(self.camera.frame_height + 0.5)
-
-        walls = get_walls(width, height)
-        for (x1, y1), (x2, y2) in walls:
-            self.add(Line(
-                (x1 - width / 2 + 0.5, y1 - height / 2 + 0.5, 0),
-                (x2 - width / 2 + 0.5, y2 - height / 2 + 0.5, 0),
-                color=random.choice(opts.PALETTE)
-            ))
-        for x in range(width):
-            for y in range(height):
-                self.add(Dot(color=opts.FOREGROUND, radius=0.075).move_to(np.array([x - width / 2 + 0.5, y - height / 2 + 0.5, 0])))
-
-def get_walls(width, height):
-    def rec(x, y):
+def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int]]]:
+    def rec(x: int, y: int) -> None:
         seen.add((x, y))
         neighbours = [(nx, ny) for nx, ny in (
             (x - 1, y),
             (x + 1, y),
             (x, y - 1),
             (x, y + 1),
-        ) if 0 <= nx < width - 1 and 0 <= ny < height - 1 and (nx, ny) not in seen]
+        ) if 0 <= nx < cols - 1 and 0 <= ny < rows - 1 and (nx, ny) not in seen]
 
         random.shuffle(neighbours)
         for nx, ny in neighbours:
             if (nx, ny) in seen:
                 continue
+
+            #remove wall crossed over in the walk
             if nx == x:
-                walls.remove(((x, max(y, ny)), (x + 1, max(y, ny))))
-            if ny == y:
-                walls.remove(((max(x, nx), y), (max(x, nx), y + 1)))
+                walls.remove((
+                    (x, max(y, ny)),
+                    (x + 1, max(y, ny))
+                ))
+            elif ny == y:
+                walls.remove((
+                    (max(x, nx), y),
+                    (max(x, nx), y + 1)
+                ))
             rec(nx, ny)
 
-    walls = set()
-    for x in range(width):
-        for y in range(height):
-            if x < width - 1:
+    # intiialse all walls as up
+    walls: set[tuple[tuple[int, int], tuple[int, int]]] = set()
+    for x in range(cols):
+        for y in range(rows):
+            if x < cols - 1:
                 walls.add(((x, y), (x + 1, y)))
-            if y < height - 1:
+            if y < rows - 1:
                 walls.add(((x, y), (x ,y + 1)))
-    seen = set()
+
+    seen: set[tuple[int, int]] = set()
     rec(0, 0)
+
     return walls
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-o", "--output")
+    args = parser.parse_args()
+    Walk(args.output).generate()
