@@ -8,12 +8,9 @@ import argparse
 
 
 class Walk(WallpaperGenerator):
-    LINE_WIDTH: int = 8
-    CIRCLE_RADIUS: int = 12
-
     def __init__(self, base: str):
         super().__init__()
-        self.out_base: str = base or "walk"
+        self.out_base: str = base or "walk.png"
 
     @override
     def generate(self):
@@ -40,7 +37,7 @@ class Walk(WallpaperGenerator):
         for p1, p2 in walls:
             draw.line(
                 (point_to_coord(p1), point_to_coord(p2)),
-                width=int(self.LINE_WIDTH * opts.SCALE),
+                width=self.LINE_WIDTH,
                 fill=random.choice(opts.PALETTE),
             )
 
@@ -48,7 +45,7 @@ class Walk(WallpaperGenerator):
             for y in range(rows):
                 draw.circle(
                     point_to_coord((x, y)),
-                    radius=int(self.CIRCLE_RADIUS * opts.SCALE),
+                    radius=self.CIRCLE_RADIUS,
                     fill=opts.FOREGROUND,
                 )
 
@@ -70,7 +67,7 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
             if (nx, ny) in seen:
                 continue
 
-            #remove wall crossed over in the walk
+            # remove wall crossed over in the walk
             if nx == x:
                 walls.remove((
                     (x, max(y, ny)),
