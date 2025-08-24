@@ -1,14 +1,14 @@
 import json
-import os
 
-_PATH = os.path.join(os.path.dirname(__file__), "../../config.json")
 
-with open(_PATH, "r") as f:
-    _dct = json.loads(f.read())
+class Opts:
+    def __init__(self, config_path):
+        with open(config_path, "r") as f:
+            dct = json.loads(f.read())
 
-BACKGROUND: str = _dct["colors"]["background"]
-FOREGROUND: str = _dct["colors"]["foreground"]
-PALETTE: list[str] = _dct["colors"]["palette"]
-WIDTH: int = _dct["dimensions"]["width"]
-HEIGHT: int = _dct["dimensions"]["height"]
-SCALE: float = _dct["dimensions"]["scale"]
+        self.BACKGROUND: str = dct["colors"]["background"]
+        self.FOREGROUND: str = dct["colors"]["foreground"]
+        self.PALETTE: list[str] = dct["colors"]["palette"]
+        self.WIDTH: int = dct["dimensions"]["width"]
+        self.HEIGHT: int = dct["dimensions"]["height"]
+        self.SCALE: float = dct["dimensions"]["scale"]

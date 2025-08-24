@@ -3,7 +3,6 @@ import math
 import argparse
 from typing import override
 from PIL import Image, ImageDraw
-import util.get_opts as opts
 from util.wallpaper_generator import WallpaperGenerator
 
 
@@ -21,8 +20,8 @@ class Tree(WallpaperGenerator):
 
             draw.line(
                 (point, p),
-                width = int(self.LINE_WIDTH * opts.SCALE),
-                fill=random.choice(opts.PALETTE)
+                width = int(self.LINE_WIDTH * self.opts.SCALE),
+                fill=random.choice(self.opts.PALETTE)
             )
 
             tree_path(p, angle + left_angle, r * 0.75)
@@ -30,15 +29,15 @@ class Tree(WallpaperGenerator):
 
         img = Image.new(
             "RGB",
-            (opts.WIDTH, opts.HEIGHT),
-            opts.BACKGROUND,
+            (self.opts.WIDTH, self.opts.HEIGHT),
+            self.opts.BACKGROUND,
         )
         draw = ImageDraw.Draw(img)
         left_angle: float = random.randint(10, 60)
         right_angle: float = random.randint(10, 60)
-        initial_r = opts.HEIGHT // 4
-        initial_p = (opts.WIDTH // 2, opts.HEIGHT * 7 // 8)
-        threshold: float = opts.SCALE * initial_r / 20
+        initial_r = self.opts.HEIGHT // 4
+        initial_p = (self.opts.WIDTH // 2, self.opts.HEIGHT * 7 // 8)
+        threshold: float = self.opts.SCALE * initial_r / 20
         tree_path(initial_p, 90, initial_r)
 
         img.save(self.out_path)
@@ -46,6 +45,7 @@ class Tree(WallpaperGenerator):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", required=True)
+    parser.add_argument("-o", "--output", type=str, required=True)
+    parser.add_argument("-c", "--config", type=str, default="config.json")
     args = parser.parse_args()
-    Tree(args.output).generate()
+    Tree(args.output, args.config).generate()
