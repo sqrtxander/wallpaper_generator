@@ -30,7 +30,6 @@ class FilledDelaunay(WallpaperGenerator):
         )
         edge_pairs = DelaunayHelper(vertices)
 
-        print(edge_pairs)
         for edge_pair in edge_pairs.simplices:
             draw.polygon(
                 tuple(vertices[i] for i in edge_pair),
