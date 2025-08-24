@@ -1,6 +1,5 @@
 from scipy.spatial import Delaunay as DelaunayHelper
 from typing import override
-import os
 from PIL import Image, ImageDraw
 import random
 from util.wallpaper_generator import WallpaperGenerator
@@ -18,10 +17,7 @@ class Delaunay(WallpaperGenerator):
         )
         draw = ImageDraw.Draw(img)
 
-        scale = 150 * opts.SCALE
-
-        dot_count = int(opts.WIDTH * opts.HEIGHT / (scale * scale))
-
+        dot_count = int(opts.WIDTH * opts.HEIGHT / (self.SCREEN_SCALE * self.SCREEN_SCALE))
         vertices: tuple[tuple[float, float], ...] = tuple(
             (random.uniform(0, opts.WIDTH), random.uniform(0, opts.HEIGHT))
             for _ in range(dot_count)

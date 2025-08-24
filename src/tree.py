@@ -2,7 +2,6 @@ import random
 import math
 import argparse
 from typing import override
-import os
 from PIL import Image, ImageDraw
 import util.get_opts as opts
 from util.wallpaper_generator import WallpaperGenerator

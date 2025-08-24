@@ -1,5 +1,4 @@
 from typing import override
-import os
 from PIL import Image, ImageDraw
 import random
 from util.wallpaper_generator import WallpaperGenerator
@@ -16,18 +15,17 @@ class Walk(WallpaperGenerator):
             opts.BACKGROUND,
         )
         draw = ImageDraw.Draw(img)
-        scale = 150 * opts.SCALE
-        # can't use integer division because scale can be a float
-        rows = int(opts.HEIGHT / scale)
-        cols = int(opts.WIDTH / scale)
+        # can't use integer division because SCREEN_SCALE can be a float
+        rows = int(opts.HEIGHT / self.SCREEN_SCALE)
+        cols = int(opts.WIDTH / self.SCREEN_SCALE)
         walls: set[tuple[tuple[int, int], tuple[int, int]]] = get_walls(cols, rows)
 
         def point_to_coord(p: tuple[int, int]) -> tuple[int, int]:
             x, y = p
             mx, my = opts.WIDTH // 2, opts.HEIGHT // 2
             return (
-                int(mx - (x - cols / 2 + 0.5) * scale),
-                int(my - (y - rows / 2 + 0.5) * scale),
+                int(mx - (x - cols / 2 + 0.5) * self.SCREEN_SCALE),
+                int(my - (y - rows / 2 + 0.5) * self.SCREEN_SCALE),
             )
 
         for p1, p2 in walls:
