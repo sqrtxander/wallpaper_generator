@@ -1,36 +1,50 @@
-from manim import *
 from scipy.spatial import Delaunay as DelaunayHelper
+from typing import override
+import os
+from PIL import Image, ImageDraw
 import random
-import util.get_options as opts
+from util.wallpaper_generator import WallpaperGenerator
+import util.get_opts as opts
+import argparse
 
+class FilledDelaunay(WallpaperGenerator):
+    def __init__(self, base: str):
+        super().__init__()
+        self.out_base: str = base or "filled_delaunay.png"
 
-config.background_color = opts.BACKGROUND
-config.pixel_width = opts.WIDTH
-config.pixel_height = opts.HEIGHT
-config.frame_width /= opts.SCALE
-
-
-class FilledDelaunay(Scene):
-    def construct(self):
-        dot_count = int(self.camera.frame_width * self.camera.frame_height)
-
-        points = self.get_n_random_points(dot_count)
-        delaunay = DelaunayHelper([p[:2] for p in points])
-        triangles = VGroup(
-            Polygon(
-                *(points[i] for i in triangle_points),
-                fill_color=random.choice(opts.PALETTE),
-                fill_opacity=1,
-                color=None,
-                stroke_width=2,
-            )
-            for triangle_points in delaunay.simplices
+    @override
+    def generate(self):
+        img = Image.new(
+            "RGB",
+            (opts.WIDTH, opts.HEIGHT),
+            opts.BACKGROUND,
         )
-        self.add(triangles)
+        draw = ImageDraw.Draw(img)
 
-    def get_n_random_points(self, n):
-        return [np.around((
-            (np.random.rand() - 0.5) * self.camera.frame_width,
-            (np.random.rand() - 0.5) * self.camera.frame_height,
-            0), 2) for _ in range(n)]
+        scale = 150 * opts.SCALE
+
+        dot_count = int(opts.WIDTH * opts.HEIGHT / (scale * scale))
+        vertices: tuple[tuple[float, float], ...] = tuple(
+            (random.uniform(0, opts.WIDTH), random.uniform(0, opts.HEIGHT))
+            for _ in range(dot_count)
+        )
+        edge_pairs = DelaunayHelper(vertices)
+
+        print(edge_pairs)
+        for edge_pair in edge_pairs.simplices:
+            draw.polygon(
+                tuple(vertices[i] for i in edge_pair),
+                outline=opts.BACKGROUND,
+                width=self.LINE_WIDTH // 2,
+                fill=random.choice(opts.PALETTE),
+            )
+
+        img.save(os.path.join(self.out_dir, self.out_base))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-o", "--output")
+    args = parser.parse_args()
+    FilledDelaunay(args.output).generate()
 

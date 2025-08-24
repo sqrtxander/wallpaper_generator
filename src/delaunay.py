@@ -1,45 +1,60 @@
-from manim import *
 from scipy.spatial import Delaunay as DelaunayHelper
+from typing import override
+import os
+from PIL import Image, ImageDraw
 import random
-import util.get_options as opts
+from util.wallpaper_generator import WallpaperGenerator
+import util.get_opts as opts
+import argparse
 
 
-config.background_color = opts.BACKGROUND
-config.pixel_width = opts.WIDTH
-config.pixel_height = opts.HEIGHT
-config.frame_width /= opts.SCALE
+class Delaunay(WallpaperGenerator):
+    def __init__(self, base: str):
+        super().__init__()
+        self.out_base: str = base or "delaunay.png"
 
+    @override
+    def generate(self):
+        img = Image.new(
+            "RGB",
+            (opts.WIDTH, opts.HEIGHT),
+            opts.BACKGROUND,
+        )
+        draw = ImageDraw.Draw(img)
 
-class Delaunay(Scene):
-    def construct(self):
-        dot_count = int(self.camera.frame_width * self.camera.frame_height)
+        scale = 150 * opts.SCALE
 
-        dots = self.get_n_random_dots(dot_count)
+        dot_count = int(opts.WIDTH * opts.HEIGHT / (scale * scale))
 
-        dot_coords = [dot.get_center().tolist()[:-1] for dot in dots]
-        delaunay = create_delaunay(dot_coords)
-        lines = VGroup(Line((x1, y1, 0), (x2, y2, 0), color=random.choice(opts.PALETTE))
-                            for (x1, y1), (x2, y2) in delaunay)
-        self.add(lines)
-        self.add(dots)
+        vertices: tuple[tuple[float, float], ...] = tuple(
+            (random.uniform(0, opts.WIDTH), random.uniform(0, opts.HEIGHT))
+            for _ in range(dot_count)
+        )
 
-    def get_n_random_dots(self, n):
-        return VGroup(Dot(color=opts.FOREGROUND, radius=0.075).move_to(np.around((
-            (np.random.rand() - 0.5) * self.camera.frame_width,
-            (np.random.rand() - 0.5) * self.camera.frame_height,
-            0), 2)) for _ in range(n))
+        edges = create_delaunay(vertices)
 
+        for edge in edges:
+            draw.line(edge, fill=random.choice(opts.PALETTE), width=self.LINE_WIDTH)
 
-def create_delaunay(points):
-    points = np.array(points)
+        for vertex in vertices:
+            draw.circle(vertex, radius=self.CIRCLE_RADIUS, fill=opts.FOREGROUND)
+
+        img.save(os.path.join(self.out_dir, self.out_base))
+
+def create_delaunay(points: tuple[tuple[float, float], ...]) -> set[tuple[tuple[float, float], tuple[float, float]]]:
     tri = DelaunayHelper(points)
-    edges = set()
+    edges: set[tuple[tuple[float, float], tuple[float, float]]] = set()
 
     for simplex in tri.simplices:
         for i in range(3):
-            edge = tuple(
-                sorted((tuple(points[simplex[i]]), tuple(points[simplex[(i+1) % 3]]))))
+            edge = tuple(sorted((tuple(points[simplex[i]]), tuple(points[simplex[(i+1) % 3]]))))
             edges.add(edge)
 
     return edges
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-o", "--output")
+    args = parser.parse_args()
+    Delaunay(args.output).generate()
