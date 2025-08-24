@@ -21,6 +21,9 @@
         <td>
             <img src="output/filled_delaunay.png"
         </td>
+        <td>
+            <img src="output/rects.png"
+        </td>
     </tr>
 </table>
 
@@ -29,17 +32,18 @@
 1. Install the requirements with `pip install -r requirements.txt`
 1. Generate an image with
     ```bash
-    manim -s src/<script>.py -o <filename>
+    python src/<script>.py --config <configpath> -output <output>
     ```
-    The rendered image will appear in `outputs/<filename>`
+    The config path defaults to `config.json` if not supplied. An output is required.
 1. Alternatively, generate all wallpapers at once with
     ```bash
-    for pth in $(find src/ -maxdepth 1 -type f -name "*.py"); do manim -s $pth -o $(basename $pth .py); done
+    for pth in $(find src/ -maxdepth 1 -type f -name "*.py"); do python $pth -o output/$(basename $pth .py).png; done
     ```
+    They will appear in `output/<script_basename>.png`
 
 
 ## ⚙️ Configuration
-Modify [options.json](options.json) to fit your needs.
+Modify [options.json](options.json) to fit your needs, or create a new json file and pass it in with the `--config` argument.
 
 The fields are as follows:
 - `dimensions.width`: the width of your wallpapers in pixels
@@ -76,5 +80,4 @@ The fields are as follows:
 
 ## 🤝 Acknowledgements
 - [scottmckendry/cyberdream.nvim](https://github.com/scottmckendry/cyberdream.nvim): Colorscheme used in the example wallpapers and config
-- [ManimCommunity/manim](https://github.com/ManimCommunity/manim): Python library used for generating wallpapers
 
