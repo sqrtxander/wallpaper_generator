@@ -8,10 +8,6 @@ import util.get_opts as opts
 import argparse
 
 class FilledDelaunay(WallpaperGenerator):
-    def __init__(self, base: str):
-        super().__init__()
-        self.out_base: str = base or "filled_delaunay.png"
-
     @override
     def generate(self):
         img = Image.new(
@@ -38,12 +34,12 @@ class FilledDelaunay(WallpaperGenerator):
                 fill=random.choice(opts.PALETTE),
             )
 
-        img.save(os.path.join(self.out_dir, self.out_base))
+        img.save(self.out_path)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output")
+    parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
     FilledDelaunay(args.output).generate()
 

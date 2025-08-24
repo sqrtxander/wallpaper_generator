@@ -9,10 +9,6 @@ from util.wallpaper_generator import WallpaperGenerator
 
 
 class Sierpinski(WallpaperGenerator):
-    def __init__(self, base: str):
-        super().__init__()
-        self.out_base: str = base or "sierpinski.png"
-
     @override
     def generate(self):
         def midpoint(p1: tuple[float, float], p2: tuple[float, float]) -> tuple[float, float]:
@@ -100,11 +96,11 @@ class Sierpinski(WallpaperGenerator):
 
         sierpinsify(points)
 
-        img.save(os.path.join(self.out_dir, self.out_base))
+        img.save(self.out_path)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output")
+    parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
     Sierpinski(args.output).generate()

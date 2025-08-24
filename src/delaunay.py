@@ -9,10 +9,6 @@ import argparse
 
 
 class Delaunay(WallpaperGenerator):
-    def __init__(self, base: str):
-        super().__init__()
-        self.out_base: str = base or "delaunay.png"
-
     @override
     def generate(self):
         img = Image.new(
@@ -39,7 +35,7 @@ class Delaunay(WallpaperGenerator):
         for vertex in vertices:
             draw.circle(vertex, radius=self.CIRCLE_RADIUS, fill=opts.FOREGROUND)
 
-        img.save(os.path.join(self.out_dir, self.out_base))
+        img.save(self.out_path)
 
 def create_delaunay(points: tuple[tuple[float, float], ...]) -> set[tuple[tuple[float, float], tuple[float, float]]]:
     tri = DelaunayHelper(points)
@@ -55,6 +51,6 @@ def create_delaunay(points: tuple[tuple[float, float], ...]) -> set[tuple[tuple[
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output")
+    parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
     Delaunay(args.output).generate()

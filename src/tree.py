@@ -9,10 +9,6 @@ from util.wallpaper_generator import WallpaperGenerator
 
 
 class Tree(WallpaperGenerator):
-    def __init__(self, base: str):
-        super().__init__()
-        self.out_base: str = base or "tree.png"
-
     @override
     def generate(self):
         def tree_path(point: tuple[float, float], angle: float, r: float):
@@ -46,11 +42,11 @@ class Tree(WallpaperGenerator):
         threshold: float = opts.SCALE * initial_r / 20
         tree_path(initial_p, 90, initial_r)
 
-        img.save(os.path.join(self.out_dir, self.out_base))
+        img.save(self.out_path)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output")
+    parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
     Tree(args.output).generate()

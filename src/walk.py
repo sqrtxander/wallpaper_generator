@@ -8,10 +8,6 @@ import argparse
 
 
 class Walk(WallpaperGenerator):
-    def __init__(self, base: str):
-        super().__init__()
-        self.out_base: str = base or "walk.png"
-
     @override
     def generate(self):
         img = Image.new(
@@ -49,7 +45,7 @@ class Walk(WallpaperGenerator):
                     fill=opts.FOREGROUND,
                 )
 
-        img.save(os.path.join(self.out_dir, self.out_base))
+        img.save(self.out_path)
 
 
 def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int]]]:
@@ -97,6 +93,6 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output")
+    parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args()
     Walk(args.output).generate()
