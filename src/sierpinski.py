@@ -1,9 +1,10 @@
 import random
-import math
-import argparse
-from typing import override
 from PIL import Image, ImageDraw
+from typing import override
 from util.wallpaper_generator import WallpaperGenerator
+from util.main import main
+
+import math
 
 
 class Sierpinski(WallpaperGenerator):
@@ -98,8 +99,4 @@ class Sierpinski(WallpaperGenerator):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", type=str, required=True)
-    parser.add_argument("-c", "--config", type=str, default="config.json")
-    args = parser.parse_args()
-    Sierpinski(args.output, args.config).generate()
+    main(Sierpinski)

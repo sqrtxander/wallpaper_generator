@@ -32,9 +32,11 @@
 1. Install the requirements with `pip install -r requirements.txt`
 1. Generate an image with
     ```bash
-    python src/<script>.py --config <configpath> -output <output>
+    python src/<script>.py --config <configpath> -output <output> --seed <seed>
     ```
-    The config path defaults to `config.json` if not supplied. An output is required.
+    The config path defaults to `config.json` if not supplied. An output is
+    required. For reproducibility, a seed in the form of an integer can be
+    provided via the `--seed` argument
 1. Alternatively, generate all wallpapers at once with
     ```bash
     for pth in $(find src/ -maxdepth 1 -type f -name "*.py"); do python $pth -o output/$(basename $pth .py).png; done

@@ -1,8 +1,8 @@
-from typing import override
-from PIL import Image, ImageDraw
 import random
+from PIL import Image, ImageDraw
+from typing import override
 from util.wallpaper_generator import WallpaperGenerator
-import argparse
+from util.main import main
 
 
 class Rects(WallpaperGenerator):
@@ -66,8 +66,4 @@ def get_rects(cols: int, rows: int, holes: int, min_area: int, max_area: int) ->
     return rects
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", type=str, required=True)
-    parser.add_argument("-c", "--config", type=str, default="config.json")
-    args = parser.parse_args()
-    Rects(args.output, args.config).generate()
+    main(Rects)

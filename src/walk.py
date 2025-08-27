@@ -1,9 +1,8 @@
+import random
 from typing import override
 from PIL import Image, ImageDraw
-import random
 from util.wallpaper_generator import WallpaperGenerator
-import argparse
-
+from util.main import main
 
 class Walk(WallpaperGenerator):
     @override
@@ -89,8 +88,4 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", type=str, required=True)
-    parser.add_argument("-c", "--config", type=str, default="config.json")
-    args = parser.parse_args()
-    Walk(args.output, args.config).generate()
+    main(Walk)

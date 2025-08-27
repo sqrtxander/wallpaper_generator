@@ -1,9 +1,10 @@
-from scipy.spatial import Delaunay as DelaunayHelper
-from typing import override
-from PIL import Image, ImageDraw
 import random
+from PIL import Image, ImageDraw
+from typing import override
 from util.wallpaper_generator import WallpaperGenerator
-import argparse
+from util.main import main
+
+from scipy.spatial import Delaunay as DelaunayHelper
 
 class FilledDelaunay(WallpaperGenerator):
     @override
@@ -34,8 +35,4 @@ class FilledDelaunay(WallpaperGenerator):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", type=str, required=True)
-    parser.add_argument("-c", "--config", type=str, default="config.json")
-    args = parser.parse_args()
-    FilledDelaunay(args.output, args.config).generate()
+    main(FilledDelaunay)
