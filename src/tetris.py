@@ -31,8 +31,6 @@ class Tetris(WallpaperGenerator):
         rows = int(self.opts.HEIGHT / self.SCREEN_SCALE)
         cols = int(self.opts.WIDTH / self.SCREEN_SCALE)
 
-        print(rows, cols)
-
         def point_to_coord(p: Coord) -> Coord:
             x, y = p
             mx, my = self.opts.WIDTH / 2, self.opts.HEIGHT / 2
@@ -195,7 +193,6 @@ class Tetris(WallpaperGenerator):
 
         max_attempts = 10
         for attempt in range(max_attempts):
-            print(attempt)
             result.clear()
             occupied.clear()
 
