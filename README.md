@@ -25,6 +25,11 @@
             <img src="output/rects.png"
         </td>
     </tr>
+    <tr>
+        <td>
+            <img src="output/tetris.png"
+        </td>
+    </tr>
 </table>
 
 ## 🚀 Usage
