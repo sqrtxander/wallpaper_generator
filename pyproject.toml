@@ -1,0 +1,11 @@
+[project.scripts]
+wallpaper-generator = "wallpaper_generator.__main__:main"
+
+[project]
+name = "wallpaper_generator"
+version = "0.1.0"
+dependencies = [
+    "numpy>=2.4",
+    "pillow>=13.0.0",
+    "scipy>=1.17",
+]

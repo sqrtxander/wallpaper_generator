@@ -1,8 +1,7 @@
 import random
 from PIL import Image, ImageDraw
 from typing import TypeAlias, override
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 
 Coord: TypeAlias = tuple[int, int]
 Tetromino: TypeAlias = tuple[Coord, Coord, Coord, Coord]
@@ -45,10 +44,7 @@ class Tetris(WallpaperGenerator):
             outline = get_tetromino_outline(t)
             coords = [point_to_coord(p) for p in outline]
             coords_closed = coords + [coords[0]]
-            draw.polygon(
-                coords,
-                fill=color
-            )
+            draw.polygon(coords, fill=color)
 
             gap = self.LINE_WIDTH
             for (x1, y1), (x2, y2) in zip(coords_closed, coords_closed[1:]):
@@ -59,7 +55,7 @@ class Tetris(WallpaperGenerator):
                 draw.rectangle(
                     (x1 - gap, y1 - gap, x2 + gap, y2 + gap),
                     fill=self.opts.BACKGROUND,
-                    width=self.LINE_WIDTH*2
+                    width=self.LINE_WIDTH * 2,
                 )
 
         img.save(self.out_path)
@@ -84,15 +80,17 @@ class Tetris(WallpaperGenerator):
                 min_x = min(sx for sx, _ in rot)
                 min_y = min(sy for _, sy in rot)
                 normalized = [(sx - min_x, sy - min_y) for sx, sy in rot]
-                normalized_shapes.append((
+                normalized_shapes.append(
                     (
-                        normalized[0],
-                        normalized[1],
-                        normalized[2],
-                        normalized[3],
-                    ),
-                    color
-                ))
+                        (
+                            normalized[0],
+                            normalized[1],
+                            normalized[2],
+                            normalized[3],
+                        ),
+                        color,
+                    )
+                )
 
         def find_empty_cell(occupied: set[Coord]) -> Coord | None:
             for y in range(rows - 1, -1, -1):
@@ -101,7 +99,9 @@ class Tetris(WallpaperGenerator):
                         return (x, y)
             return None
 
-        def can_fill_tetromino(occupied: set[Coord], target: Coord) -> list[tuple[Tetromino, str]]:
+        def can_fill_tetromino(
+            occupied: set[Coord], target: Coord
+        ) -> list[tuple[Tetromino, str]]:
             valid_placements: list[tuple[Tetromino, str]] = []
 
             for shape, color in normalized_shapes:
@@ -112,25 +112,31 @@ class Tetris(WallpaperGenerator):
                 # Only try offsets that make sense for this shape
                 for dx in range(-max_sx, 1):
                     for dy in range(-max_sy, 1):
-                        placed = tuple((target[0] + dx + sx, target[1] + dy + sy)
-                                       for sx, sy in shape)
+                        placed = tuple(
+                            (target[0] + dx + sx, target[1] + dy + sy)
+                            for sx, sy in shape
+                        )
 
                         # Check if target is covered and placement is valid
-                        if (target in placed and
-                            all(0 <= px < cols and 0 <= py < rows and (px, py) not in occupied
-                                for px, py in placed)):
-                            valid_placements.append(((
-                                placed[0],
-                                placed[1],
-                                placed[2],
-                                placed[3]
-                            ), color))
+                        if target in placed and all(
+                            0 <= px < cols
+                            and 0 <= py < rows
+                            and (px, py) not in occupied
+                            for px, py in placed
+                        ):
+                            valid_placements.append(
+                                ((placed[0], placed[1], placed[2], placed[3]), color)
+                            )
 
             return valid_placements
 
         def has_small_hole(occupied: set[Coord]) -> bool:
-            empty_cells = {(x, y) for x in range(cols)
-                           for y in range(rows) if (x, y) not in occupied}
+            empty_cells = {
+                (x, y)
+                for x in range(cols)
+                for y in range(rows)
+                if (x, y) not in occupied
+            }
 
             if not empty_cells:
                 return False
@@ -141,7 +147,7 @@ class Tetris(WallpaperGenerator):
                 stack = [start]
                 while stack:
                     x, y = stack.pop()
-                    for nx, ny in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
+                    for nx, ny in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
                         if (nx, ny) in empty_cells and (nx, ny) not in region:
                             region.add((nx, ny))
                             stack.append((nx, ny))
@@ -157,7 +163,9 @@ class Tetris(WallpaperGenerator):
 
             return False
 
-        def solve(occupied: set[Coord], result: list[tuple[Tetromino, str]], depth: int = 0) -> bool:
+        def solve(
+            occupied: set[Coord], result: list[tuple[Tetromino, str]], depth: int = 0
+        ) -> bool:
             if depth > 50:
                 return False
 
@@ -165,8 +173,9 @@ class Tetris(WallpaperGenerator):
             if target is None:
                 return True  # Successfully filled
 
-            total_empty = sum(1 for x in range(cols)
-                              for y in range(rows) if (x, y) not in occupied)
+            total_empty = sum(
+                1 for x in range(cols) for y in range(rows) if (x, y) not in occupied
+            )
 
             if total_empty < 4:
                 return True
@@ -248,4 +257,4 @@ def get_tetromino_outline(tetromino: Tetromino) -> list[Coord]:
 
 
 if __name__ == "__main__":
-    main(Tetris)
+    generate_wallpaper(Tetris)

@@ -1,8 +1,8 @@
 import random
 from typing import override
 from PIL import Image, ImageDraw
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
+
 
 class Walk(WallpaperGenerator):
     @override
@@ -47,12 +47,16 @@ class Walk(WallpaperGenerator):
 def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int]]]:
     def rec(x: int, y: int) -> None:
         seen.add((x, y))
-        neighbours = [(nx, ny) for nx, ny in (
-            (x - 1, y),
-            (x + 1, y),
-            (x, y - 1),
-            (x, y + 1),
-        ) if 0 <= nx < cols - 1 and 0 <= ny < rows - 1 and (nx, ny) not in seen]
+        neighbours = [
+            (nx, ny)
+            for nx, ny in (
+                (x - 1, y),
+                (x + 1, y),
+                (x, y - 1),
+                (x, y + 1),
+            )
+            if 0 <= nx < cols - 1 and 0 <= ny < rows - 1 and (nx, ny) not in seen
+        ]
 
         random.shuffle(neighbours)
         for nx, ny in neighbours:
@@ -61,15 +65,9 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
 
             # remove wall crossed over in the walk
             if nx == x:
-                walls.remove((
-                    (x, max(y, ny)),
-                    (x + 1, max(y, ny))
-                ))
+                walls.remove(((x, max(y, ny)), (x + 1, max(y, ny))))
             elif ny == y:
-                walls.remove((
-                    (max(x, nx), y),
-                    (max(x, nx), y + 1)
-                ))
+                walls.remove(((max(x, nx), y), (max(x, nx), y + 1)))
             rec(nx, ny)
 
     # intiialse all walls as up
@@ -79,7 +77,7 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
             if x < cols - 1:
                 walls.add(((x, y), (x + 1, y)))
             if y < rows - 1:
-                walls.add(((x, y), (x ,y + 1)))
+                walls.add(((x, y), (x, y + 1)))
 
     seen: set[tuple[int, int]] = set()
     rec(0, 0)
@@ -88,4 +86,4 @@ def get_walls(cols: int, rows: int) -> set[tuple[tuple[int, int], tuple[int, int
 
 
 if __name__ == "__main__":
-    main(Walk)
+    generate_wallpaper(Walk)

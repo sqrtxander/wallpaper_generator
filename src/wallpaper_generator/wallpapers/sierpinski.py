@@ -1,24 +1,31 @@
 import random
 from PIL import Image, ImageDraw
 from typing import override
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
-
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 import math
 
 
 class Sierpinski(WallpaperGenerator):
     @override
     def generate(self):
-        def midpoint(p1: tuple[float, float], p2: tuple[float, float]) -> tuple[float, float]:
+        def midpoint(
+            p1: tuple[float, float], p2: tuple[float, float]
+        ) -> tuple[float, float]:
             x1, y1 = p1
             x2, y2 = p2
             return (x1 + x2) / 2, (y1 + y2) / 2
-        def sierpinsify(points: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
+
+        def sierpinsify(
+            points: tuple[
+                tuple[float, float], tuple[float, float], tuple[float, float]
+            ],
+        ):
             if math.dist(points[1], points[2]) < threshold:
                 return
 
-            midpoints: tuple[tuple[float, float], tuple[float, float], tuple[float, float]] = (
+            midpoints: tuple[
+                tuple[float, float], tuple[float, float], tuple[float, float]
+            ] = (
                 midpoint(points[0], points[1]),
                 midpoint(points[1], points[2]),
                 midpoint(points[2], points[0]),
@@ -41,8 +48,8 @@ class Sierpinski(WallpaperGenerator):
             )
 
             sierpinsify((points[0], midpoints[0], midpoints[2]))
-            sierpinsify((midpoints[0], points[1],  midpoints[1]))
-            sierpinsify((midpoints[2], midpoints[1],  points[2]))
+            sierpinsify((midpoints[0], points[1], midpoints[1]))
+            sierpinsify((midpoints[2], midpoints[1], points[2]))
 
         img = Image.new(
             "RGB",
@@ -52,30 +59,19 @@ class Sierpinski(WallpaperGenerator):
         draw = ImageDraw.Draw(img)
 
         threshold = 50 * self.opts.SCALE
-        s = min(
-            self.opts.HEIGHT * 2 / math.sqrt(3),
-            self.opts.WIDTH,
-        ) * 0.8
-
-        points: tuple[
-            tuple[float, float],
-            tuple[float, float],
-            tuple[float, float]
-        ] = (
-            (
-                (self.opts.WIDTH - s) / 2,
-                self.opts.HEIGHT / 2 + s * math.sqrt(3) / 4
-            ),
-            (
-                (self.opts.WIDTH + s) / 2,
-                self.opts.HEIGHT / 2 + s * math.sqrt(3) / 4
-            ),
-            (
-                self.opts.WIDTH / 2,
-                self.opts.HEIGHT / 2 - s * math.sqrt(3) / 4
-            ),
+        s = (
+            min(
+                self.opts.HEIGHT * 2 / math.sqrt(3),
+                self.opts.WIDTH,
+            )
+            * 0.8
         )
 
+        points: tuple[tuple[float, float], tuple[float, float], tuple[float, float]] = (
+            ((self.opts.WIDTH - s) / 2, self.opts.HEIGHT / 2 + s * math.sqrt(3) / 4),
+            ((self.opts.WIDTH + s) / 2, self.opts.HEIGHT / 2 + s * math.sqrt(3) / 4),
+            (self.opts.WIDTH / 2, self.opts.HEIGHT / 2 - s * math.sqrt(3) / 4),
+        )
 
         draw.line(
             (points[0], points[1]),
@@ -99,4 +95,4 @@ class Sierpinski(WallpaperGenerator):
 
 
 if __name__ == "__main__":
-    main(Sierpinski)
+    generate_wallpaper(Sierpinski)

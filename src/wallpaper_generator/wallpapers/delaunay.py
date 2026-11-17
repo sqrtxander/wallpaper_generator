@@ -1,10 +1,9 @@
 import random
 from PIL import Image, ImageDraw
 from typing import override
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
-
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 from scipy.spatial import Delaunay as DelaunayHelper
+
 
 class Delaunay(WallpaperGenerator):
     @override
@@ -16,7 +15,9 @@ class Delaunay(WallpaperGenerator):
         )
         draw = ImageDraw.Draw(img)
 
-        dot_count = int(self.opts.WIDTH * self.opts.HEIGHT / (self.SCREEN_SCALE * self.SCREEN_SCALE))
+        dot_count = int(
+            self.opts.WIDTH * self.opts.HEIGHT / (self.SCREEN_SCALE * self.SCREEN_SCALE)
+        )
         vertices: tuple[tuple[float, float], ...] = tuple(
             (random.uniform(0, self.opts.WIDTH), random.uniform(0, self.opts.HEIGHT))
             for _ in range(dot_count)
@@ -25,24 +26,31 @@ class Delaunay(WallpaperGenerator):
         edges = create_delaunay(vertices)
 
         for edge in edges:
-            draw.line(edge, fill=random.choice(self.opts.PALETTE), width=self.LINE_WIDTH)
+            draw.line(
+                edge, fill=random.choice(self.opts.PALETTE), width=self.LINE_WIDTH
+            )
 
         for vertex in vertices:
             draw.circle(vertex, radius=self.CIRCLE_RADIUS, fill=self.opts.FOREGROUND)
 
         img.save(self.out_path)
 
-def create_delaunay(points: tuple[tuple[float, float], ...]) -> set[tuple[tuple[float, float], tuple[float, float]]]:
+
+def create_delaunay(
+    points: tuple[tuple[float, float], ...],
+) -> set[tuple[tuple[float, float], tuple[float, float]]]:
     tri = DelaunayHelper(points)
     edges: set[tuple[tuple[float, float], tuple[float, float]]] = set()
 
     for simplex in tri.simplices:
         for i in range(3):
-            edge = tuple(sorted((tuple(points[simplex[i]]), tuple(points[simplex[(i+1) % 3]]))))
+            edge = tuple(
+                sorted((tuple(points[simplex[i]]), tuple(points[simplex[(i + 1) % 3]])))
+            )
             edges.add(edge)
 
     return edges
 
 
 if __name__ == "__main__":
-    main(Delaunay)
+    generate_wallpaper(Delaunay)

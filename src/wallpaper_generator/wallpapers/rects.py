@@ -1,8 +1,7 @@
 import random
 from PIL import Image, ImageDraw
 from typing import override
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 
 
 class Rects(WallpaperGenerator):
@@ -39,8 +38,12 @@ class Rects(WallpaperGenerator):
         img.save(self.out_path)
 
 
-def get_rects(cols: int, rows: int, holes: int, min_area: int, max_area: int) -> set[tuple[tuple[int, int], tuple[int, int]]]:
-    def split(x1: int, y1: int, x2: int, y2: int) -> set[tuple[tuple[int, int], tuple[int, int]]]:
+def get_rects(
+    cols: int, rows: int, holes: int, min_area: int, max_area: int
+) -> set[tuple[tuple[int, int], tuple[int, int]]]:
+    def split(
+        x1: int, y1: int, x2: int, y2: int
+    ) -> set[tuple[tuple[int, int], tuple[int, int]]]:
         height = y2 - y1
         width = x2 - x1
         if width * height <= min_area:
@@ -65,5 +68,6 @@ def get_rects(cols: int, rows: int, holes: int, min_area: int, max_area: int) ->
         rects.pop()
     return rects
 
+
 if __name__ == "__main__":
-    main(Rects)
+    generate_wallpaper(Rects)

@@ -1,10 +1,9 @@
 import random
 from typing import override
 from PIL import Image, ImageDraw
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
-
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 import math
+
 
 class Tree(WallpaperGenerator):
     @override
@@ -20,8 +19,8 @@ class Tree(WallpaperGenerator):
 
             draw.line(
                 (point, p),
-                width = int(self.LINE_WIDTH * self.opts.SCALE),
-                fill=random.choice(self.opts.PALETTE)
+                width=int(self.LINE_WIDTH * self.opts.SCALE),
+                fill=random.choice(self.opts.PALETTE),
             )
 
             tree_path(p, angle + left_angle, r * 0.75)
@@ -44,4 +43,4 @@ class Tree(WallpaperGenerator):
 
 
 if __name__ == "__main__":
-    main(Tree)
+    generate_wallpaper(Tree)

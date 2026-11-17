@@ -1,10 +1,9 @@
 import random
 from PIL import Image, ImageDraw
 from typing import override
-from util.wallpaper_generator import WallpaperGenerator
-from util.main import main
-
+from wallpaper_generator import WallpaperGenerator, generate_wallpaper
 from scipy.spatial import Delaunay as DelaunayHelper
+
 
 class FilledDelaunay(WallpaperGenerator):
     @override
@@ -16,7 +15,9 @@ class FilledDelaunay(WallpaperGenerator):
         )
         draw = ImageDraw.Draw(img)
 
-        dot_count = int(self.opts.WIDTH * self.opts.HEIGHT / (self.SCREEN_SCALE * self.SCREEN_SCALE))
+        dot_count = int(
+            self.opts.WIDTH * self.opts.HEIGHT / (self.SCREEN_SCALE * self.SCREEN_SCALE)
+        )
         vertices: tuple[tuple[float, float], ...] = tuple(
             (random.uniform(0, self.opts.WIDTH), random.uniform(0, self.opts.HEIGHT))
             for _ in range(dot_count)
@@ -35,4 +36,4 @@ class FilledDelaunay(WallpaperGenerator):
 
 
 if __name__ == "__main__":
-    main(FilledDelaunay)
+    generate_wallpaper(FilledDelaunay)
